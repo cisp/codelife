@@ -10,12 +10,14 @@ class Ticket(object):
     buy = "https://kyfw.12306.cn/otn/confirmPassenger/initDc"
     username = 'username'
     pwd = 'password'
+    # 选择的买票人
     name = ['name']
     fromStation = '%u6B66%u6C49%2CWHN'
     toStatioin = '%u5E94%u57CE%2CYHN'
     timeStation = '2018-02-12'
     # 车次 为0 就循环从第一个开始选票  不为0,就选择固定的车次
     order = 0
+    
 
     def __init__(self):
         pass
