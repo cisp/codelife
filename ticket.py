@@ -8,8 +8,9 @@ class Ticket(object):
     login_url = "https://kyfw.12306.cn/otn/login/init"
     initmy_url = "https://kyfw.12306.cn/otn/index/initMy12306"
     buy = "https://kyfw.12306.cn/otn/confirmPassenger/initDc"
-    username = '634646058@qq.com'
-    pwd = 'oy3171702835'
+    username = 'username'
+    pwd = 'password'
+    name = ['name']
     fromStation = '%u6B66%u6C49%2CWHN'
     toStatioin = '%u5E94%u57CE%2CYHN'
     timeStation = '2018-02-12'
@@ -60,7 +61,7 @@ class Ticket(object):
                 except Exception as ex:
                     continue
 
-        self.driver.find_by_text('欧阳亚雄').last.click()
+        self.driver.find_by_text(self.name).last.click()
         self.driver.click_link_by_id('submitOrder_id')
         sleep(10)
 
