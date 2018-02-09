@@ -8,7 +8,7 @@ from collections import Iterable
 
 def expand(item):
     if not isinstance(item, (list, tuple)):
-        raise Exception('{}不是列表'.format(item))
+        raise Exception('{}不是列表或元组'.format(item))
     for x in item:
         if isinstance(x, Iterable) and not isinstance(x, (str, bytes)):
             yield from expand(x)
