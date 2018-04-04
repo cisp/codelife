@@ -27,7 +27,6 @@ if __name__ == '__main__':
     links = get_links(TOKEN)
     pool = Pool(max_workers=5)  # 线程池每次装5个线程  其他等待执行完在进入线程池
     results = pool.map(task, links)
-
     for ret in results:
         if ret.status_code == 200:
             print('该网站{}的DA/PA为:{}/{}'.format(ret.url, ret.json().get('da'), ret.json().get('pa')))
