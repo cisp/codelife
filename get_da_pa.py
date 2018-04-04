@@ -23,7 +23,7 @@ def task(url):
 
 
 if __name__ == '__main__':
-	TOKEN = 'yourtoken'
+    TOKEN = 'yourtoken'
     links = get_links(TOKEN)
     pool = Pool(max_workers=5)  # 线程池每次装5个线程  其他等待执行完在进入线程池
     results = pool.map(task, links)
