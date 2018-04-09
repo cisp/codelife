@@ -5,3 +5,12 @@
 d1 = {'a': 1}
 d2 = {'b': 2}
 d = {**d1, **d2}
+
+# 关于str和repr说明:两个都是bulitins函数  str是返回human可读的  repr是返回解释器可识别的
+
+from datetime import datetime
+
+now = datetime.now()
+
+print(str(now))
+print(repr(now))
