@@ -64,3 +64,82 @@ import importlib
 m1 = importlib.import_module('test')
 if hasattr(m1, 'A'):
     print('模块test中存在属性A')
+	
+	
+# 最简单的单例 -- 重写__new__方法
+
+class singleton(object):
+
+	_single = None
+	
+	def __new__(cls, *arg, **args):
+		if not cls._single:
+			cls._single = super().__new__(cls)
+		return cls._single
+		
+	def __init__(self, name):
+		self.name = name
+	
+	def get_name(self):
+		return self.name
+# test
+s1 = singleton('single1')
+s2 = singleton('single2')
+
+# 下面的结果:都是
+s1.fprint()
+s2.fprint()
+
+
+# 简单类装饰器 计算某个函数调用次数:重点是里面的__call__方法   
+# __call__方法存在的意义就是是对象成为可调用对象,例如:
+# a = A();  a() ---> a就是可调用对象
+class Counter(object):
+
+    def __init__(self, func):
+        self.count = 0
+        self.func = func
+
+    def __call__(self, *args, **kwargs):
+        self.count += 1
+        return self.func(*args, **kwargs)
+
+
+@Counter
+def foo():
+    pass
+
+
+for i in range(10):
+    foo()
+
+print(foo.count)  # foo 是Count的对象
+print(foo.__class__.__name__)
+
+
+# 简单自己做一个整数迭代器
+# 核心: 必须实现的两个方法__iter__ & __next__
+# for循环  就是不断的调用__next__方法  直到遇到异常才终止
+class MyRange(object):
+
+	def __init__(self, num):
+		self.count = 0
+		self.num = num
+		
+	def __iter__(self):
+		return self  # 返回迭代对象
+		
+	def __next__(self):
+		if self.count <= self.num:
+			count = self.count 
+			self.counnt += 1
+			return count
+		else:
+			raise StopIteration('已经是最后一个元素了')
+			
+
+
+
+
+
+		
