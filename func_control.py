@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from django.core.cache import cache
+
 
 class CallTimesLimit(object):
     def __init__(self, max, time):
@@ -27,6 +29,8 @@ class CallTimesLimit(object):
                 "The function {} has been called {} times in {} seconds ".format(
                     self.__fun.__name__, self.__max, self.__time))
 					
+					
+# 测试:限制10s内 函数最多调用5次
 @CallTimesLimit(5, 10)
 def test():
 	print('call me, call me!')
@@ -34,9 +38,14 @@ def test():
 
 if __name__ == '__main__':
 	test()
+	time.sleep(2)
 	test()
+	time.sleep(2)
 	test()
+	time.sleep(2)
 	test()
+	# time.sleep(2)
+	time.sleep(5)
 	test()
 	
 	
