@@ -137,6 +137,46 @@ class MyRange(object):
 			raise StopIteration('已经是最后一个元素了')
 			
 
+# 上下文管理器
+# 与其叫管理器 不如称之为上下文协议更为恰当
+# 所谓协议 就是约定好的  python中上下文协议需要实现两个方法: __enter__ and __exit__,例如:
+
+class my_open(object):
+	
+	def __init__(self, filepath, mode):
+		self._filepath = filepath
+		self._mode = mode
+	
+	def __enter__(self, *args, **kwargs):
+		if not os.path.isexsit(self._filepath):
+			os.mkdir(self._filepath)
+		self.f = open(self._filepath, self._mode)
+		return self.f
+		
+	def __exit__(self, *args, **kwargs):
+		if self.f:
+			self.f.close()
+			
+# 上面是实现一个极简版的文件上下文协议,使用标准 with ... as ...,例如：
+
+with my_open('your file path') as f:
+	f.read()
+
+	
+# python提供另外一装饰器的方式,更加方便，如:
+from contextlib import contextmanager
+@contextmanager
+def my_open(path, mode):
+	f = open(path, mode)
+	yield f
+	f.close()
+	
+with my_open(path, mode) as f:  # python牛逼!
+	f.read()
+	
+
+	
+	
 
 
 
