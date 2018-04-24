@@ -174,8 +174,57 @@ def my_open(path, mode):
 with my_open(path, mode) as f:  # python牛逼!
 	f.read()
 	
+# python解析txt/excel/csv
+class KeywordFile(object):
+    '''
+    解析文件
+    '''
+    def __init__(self, obj):
+        self._obj = obj
 
-	
+    def __call__(self, *args, **kwargs):
+        suffix = self.is_valid_file()
+        if not suffix:
+            raise Exception('上传的文件不符合格式')
+        else:
+            if suffix == 'xls' or suffix == 'xlsx':
+                result = self.handle_excel()
+            elif suffix == 'csv':
+                result = self.handle_csv()
+            else:
+                result = self.handle_txt()
+        return json.dumps(result)
+
+    def is_valid_file(self):
+        valid_suffix = ['txt', 'xls', 'xlsx', 'csv']
+
+        file_suffix = self._obj.name.split('.')[-1]
+
+        if file_suffix in valid_suffix:
+            return file_suffix
+        else:
+            return False
+
+    def handle_excel(self):
+        result = []
+        wb = xlrd.open_workbook(filename=None, file_contents=self._obj.read())
+        # 默认第一个sheet
+        ws = wb.active
+        for row in ws.rows:
+            for cell in row:
+                result.append(cell.value)
+        return result
+
+    def handle_txt(self):
+        result = [res.strip(' ') for res in self._obj.read().split('\n') if res]
+        return result
+
+    def handle_csv(self):
+        result = []
+        table = csv.DictReader(io.StringIO(self._obj.read().decode('utf-8')))
+        for row in table:
+            result.append(row[0])
+        return result
 	
 
 
