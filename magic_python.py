@@ -177,18 +177,18 @@ with my_open(path, mode) as f:  # python牛逼!
 # python解析txt/excel/csv
 class KeywordFile(object):
     '''
-    解析文件
+    解析上传的关键词文件
     '''
-    def __init__(self, obj):
-        self._obj = obj
+    def __init__(self, filename):
+        self._filename = filename
 
     def __call__(self, *args, **kwargs):
         suffix = self.is_valid_file()
         if not suffix:
-            raise Exception('上传的文件不符合格式')
+            raise Exception('上传文件不符合文件规则')
         else:
             if suffix == 'xls' or suffix == 'xlsx':
-                result = self.handle_excel()
+                result = self.handle_excel(suffix)
             elif suffix == 'csv':
                 result = self.handle_csv()
             else:
@@ -198,16 +198,16 @@ class KeywordFile(object):
     def is_valid_file(self):
         valid_suffix = ['txt', 'xls', 'xlsx', 'csv']
 
-        file_suffix = self._obj.name.split('.')[-1]
+        file_suffix = self._filename.split('.')[-1]
 
         if file_suffix in valid_suffix:
             return file_suffix
         else:
             return False
 
-    def handle_excel(self):
+    def handle_excel(self, suffix):
         result = []
-        wb = xlrd.open_workbook(filename=None, file_contents=self._obj.read())
+        wb = openpyxl.load_workbook(self._filename) if suffix == 'xlsx' else xlrd.open_workbook(self._filename)
         # 默认第一个sheet
         ws = wb.active
         for row in ws.rows:
@@ -216,14 +216,16 @@ class KeywordFile(object):
         return result
 
     def handle_txt(self):
-        result = [res.strip(' ') for res in self._obj.read().split('\n') if res]
+        with open(self._filename, 'r') as f:
+            result = [res.strip(' ') for res in f.read().split('\n') if res]
         return result
 
     def handle_csv(self):
         result = []
-        table = csv.DictReader(io.StringIO(self._obj.read().decode('utf-8')))
-        for row in table:
-            result.append(row[0])
+        with open(self._filename, 'r') as f:
+            csv_reader = csv.reader(f)
+            for row in csv_reader:
+                result.append(row[0])
         return result
 	
 
