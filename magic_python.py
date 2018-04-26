@@ -227,6 +227,11 @@ class KeywordFile(object):
         return result
 	
 
+# python3 特有  拆箱  只能说真的很好用一个新特性
+l = [1, 2, 3, 4, 5]
+a, b, *c = l  # print: a = 1, b = 2, c = [3, 4, 5]
+
+
 
 
 
