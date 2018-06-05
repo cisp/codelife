@@ -234,6 +234,14 @@ l = [1, 2, 3, 4, 5]
 a, b, *c = l  # print: a = 1, b = 2, c = [3, 4, 5]
 
 
+# 获取文件md5值
+import hashlib
+
+m = hashlib.md5()
+m.update(open(file).read())
+md5_value = m.hexdigest()
+
+
 
 
 
