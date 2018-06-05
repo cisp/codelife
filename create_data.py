@@ -192,7 +192,7 @@ class Create:
                 ))
             if self.conn_redis.get(self.alarm_log_key):
                 self.conn_redis.delete(self.alarm_log_key)
-                self.conn_redis.set(self.alarm_log_key, json.dumps(alarm_log_data_list))
+            self.conn_redis.set(self.alarm_log_key, json.dumps(alarm_log_data_list))
             time.sleep(30)
 
     def create_ex_log_data(self, ex_log_data_list=None):
@@ -202,7 +202,12 @@ class Create:
         ex_log_type = [e[0] for e in EX_LOG_TYPE]
         while True:
             for i in range(ex_log_period_count):
-                pass
+                format_type = self.format_log_by_ex_type(random.choice(ex_log_type))
+                ex_log_data_list.append(format_type.format(self._format_time()))
+            if self.conn_redis.get(self.ex_log_key):
+                self.conn_redis.delete(self.ex_log_key)
+            self.conn_redis.set(self.ex_log_key, json.dumps(ex_log_data_list))
+            time.sleep(30)
 
     def format_log_by_ex_type(self, ex_type):
         format_log = ""
@@ -240,6 +245,7 @@ class Create:
             format_log = "未知威胁监测系统|*15|*http://xxxx|*XXXX|*doc|*dafsgsgdsfgdfg|*smtp|*3|*高|*侦察|*vpn 账号过期了|*{}|*hute@360.net|*jiaxiaozhi168@sina.com,liuziyang@rxblend.com|*y@126.com|*123|*pdf|*http://xxxx|*adfafsdfafasd"
         elif ex_type == 15:
             format_log = "未知威胁监测系统|*16|*http://xxxx|*XXXX|*txt|*fsdfggsssg|*http|*3|*高|*侦察|*172.15.14.14|*http://www.baidu.com|*1234|*test|*pdf|*1|*http://xxxx|*{}"
+        return format_log
 
     def _format_time(self):
         '''
@@ -269,3 +275,5 @@ if __name__ == '__main__':
     if not ex_log_period_count:
         print "异常场景日志周期数据不能为0"
         sys.exit()
+    create = Create()
+    create.run()
